@@ -9,7 +9,7 @@ body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     background-color: #f4f4f4;
-    color: #333;
+    color: #333; /* Couleur de texte par défaut (foncé) */
     padding: 0 20px;
 }
 
@@ -27,8 +27,10 @@ header h1 {
     margin-bottom: 1rem;
 }
 
+/* P dans le header */
 header p {
     font-size: 1.2rem;
+    color: #e0e0e0; /* Couleur claire pour le texte dans le header */
 }
 
 main {
@@ -53,7 +55,7 @@ h2 {
 
 p, li {
     font-size: 1rem;
-    color: #858585;
+    color: #858585; /* Couleur de texte foncé dans le body */
 }
 
 ul {
@@ -73,8 +75,10 @@ footer {
     border-radius: 15px 15px 0 0;
 }
 
+/* P dans le footer */
 footer p {
     font-size: 1rem;
+    color: #e0e0e0; /* Couleur claire pour le texte dans le footer */
 }
 
 /* Buttons and Links */
