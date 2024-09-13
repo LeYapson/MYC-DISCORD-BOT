@@ -1,0 +1,2 @@
+discord.py==2.0.0  # Pour l'interaction avec l'API de Discord
+python-dotenv==1.0.0  # Pour charger les variables d'environnement depuis un fichier .env
