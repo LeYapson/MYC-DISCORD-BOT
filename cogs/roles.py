@@ -5,13 +5,25 @@ from config import GUILD_ID
 class Roles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command(name='test')
+    async def test_command(self, ctx):
+        await ctx.send("Command test works!")
 
     @commands.Cog.listener()
     async def on_ready(self):
-        guild = self.bot.get_guild(GUILD_ID)
-        channel = discord.utils.get(guild.text_channels, name='👋┊roles-et-filières')
+        print("Bot is ready. Setting up roles message...")
+        guild = self.bot.get_guild(int(GUILD_ID))
+        if guild is None:
+            print(f"Guild with ID {int(GUILD_ID)} not found.")
+            return
 
-        if channel:
+        channel = discord.utils.get(guild.text_channels, name='👋┊roles-et-filières')
+        if channel is None:
+            print("Channel not found.")
+            return
+
+        try:
             message = await channel.send(
                 "Bienvenue sur le serveur de Ynov Campus !\n\n"
                 "Vous devez d'abord confirmer votre appartenance à l'école en utilisant la commande `!inscription <email>`.\n\n"
@@ -25,10 +37,18 @@ class Roles(commands.Cog):
                 "🗡️ pour B1 ANIM 3D\n⚔️ pour B2 ANIM 3D\n🔫 pour B3 ANIM 3D\n🔫 pour M1/M2 ANIM 3D\n\n"
                 "👔 pour INTERVENANT(E)"
             )
-
+            print("Message sent. Adding reactions...")
+            
             reactions = ['📱', '💻', '🖥️', '📈', '📉', '📊', '🏕️', '🏜️', '🏞️', '🎧', '🎤', '🎚️', '⛺', '🏠', '🏟️', '🗡️', '⚔️', '🔫', '👔']
             for emoji in reactions:
-                await message.add_reaction(emoji)
+                try:
+                    await message.add_reaction(emoji)
+                    print(f"Added reaction: {emoji}")
+                except Exception as e:
+                    print(f"Error adding reaction {emoji}: {e}")
+
+        except Exception as e:
+            print(f"Error setting up roles message: {e}")
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -36,8 +56,11 @@ class Roles(commands.Cog):
             return
 
         guild = self.bot.get_guild(payload.guild_id)
-        member = await guild.fetch_member(payload.user_id)
+        if guild is None:
+            print("Guild not found during reaction add.")
+            return
 
+        member = await guild.fetch_member(payload.user_id)
         etudiant_role = discord.utils.get(guild.roles, name="etudiant")
         if etudiant_role not in member.roles:
             return
@@ -68,6 +91,7 @@ class Roles(commands.Cog):
             role = discord.utils.get(guild.roles, name=role_name)
             if role:
                 await member.add_roles(role)
+                print(f"Added role {role_name} to {member.name}")
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
@@ -75,8 +99,11 @@ class Roles(commands.Cog):
             return
 
         guild = self.bot.get_guild(payload.guild_id)
-        member = await guild.fetch_member(payload.user_id)
+        if guild is None:
+            print("Guild not found during reaction remove.")
+            return
 
+        member = await guild.fetch_member(payload.user_id)
         etudiant_role = discord.utils.get(guild.roles, name="etudiant")
         if etudiant_role not in member.roles:
             return
@@ -107,6 +134,8 @@ class Roles(commands.Cog):
             role = discord.utils.get(guild.roles, name=role_name)
             if role:
                 await member.remove_roles(role)
+                print(f"Removed role {role_name} from {member.name}")
 
-def setup(bot):
-    bot.add_cog(Roles(bot))
+async def setup(bot):
+    print("Loading Roles Cog")
+    await bot.add_cog(Roles(bot))

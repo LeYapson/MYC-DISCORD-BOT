@@ -17,5 +17,5 @@ class Moderation(commands.Cog):
         deleted = await ctx.channel.purge(limit=amount)
         await ctx.send(f"{len(deleted)} messages supprimés.", delete_after=5)
 
-def setup(bot):
-    bot.add_cog(Moderation(bot))
+async def setup(bot):
+    await bot.add_cog(Moderation(bot))  # Utiliser await ici pour s'assurer que la coroutine est attendue

@@ -2,5 +2,5 @@ import os
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = '!'
-GUILD_ID = int(os.getenv('GUILD_ID'))
+GUILD_ID = 1004015076002504715
 EMAIL_DOMAIN = '@ynov.com'

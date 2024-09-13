@@ -9,8 +9,8 @@ from config import EMAIL_DOMAIN
 VERIFICATION_CODES = {}
 
 def send_verification_email(email_address, verification_code):
-    sender_email = os.getenv('SENDER_EMAIL')
-    password = os.getenv('SENDER_PASSWORD')
+    sender_email = os.getenv('SENDER-EMAIL')
+    password = os.getenv('SENDER-PASSWORD')
     message = f"""\
 Subject: Code de vérification
 
@@ -62,5 +62,5 @@ class Verification(commands.Cog):
         else:
             await ctx.send("Le code est incorrect. Veuillez réessayer.")
 
-def setup(bot):
-    bot.add_cog(Verification(bot))
+async def setup(bot):
+    await bot.add_cog(Verification(bot))
