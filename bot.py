@@ -4,11 +4,13 @@ from discord.ext import commands
 import smtplib
 import random
 import re
+import asyncio
 import os
 from dotenv import load_dotenv
+load_dotenv()
 
 TOKEN = os.getenv('DISCORD-TOKEN')
-GUILD_ID = os.getenv('GUILD-ID')  # Remplacer par l'ID de votre serveur
+GUILD_ID = 1004015076002504715  # Remplacer par l'ID de votre serveur
 EMAIL_DOMAIN = '@ynov.com'
 VERIFICATION_CODES = {}  # Stocker les codes de vérification ici
 
@@ -79,12 +81,26 @@ async def verifier(ctx, code: int):
     else:
         await ctx.send("Le code est incorrect. Veuillez réessayer.")
 
+@bot.command(name='clear')
+@commands.has_permissions(administrator=True)  # Restrict command to users with Admin permissions
+async def clear(ctx, amount: int):
+    if amount < 1:
+        await ctx.send("You need to specify a positive number of messages to delete.")
+        return
+    elif amount > 100:  # Discord's maximum limit for bulk delete
+        await ctx.send("You cannot delete more than 100 messages at a time.")
+        return
+    
+    deleted = await ctx.channel.purge(limit=amount)
+    await ctx.send(f"Deleted {len(deleted)} messages.", delete_after=5)  # Message disappears after 5 seconds
+
 # Ajouter les rôles par réaction
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} est connecté au serveur.')
 
     # Envoyer un message de bienvenue avec les réactions pour choisir les rôles
+    print(GUILD_ID)
     guild = bot.get_guild(int(GUILD_ID))
     channel = discord.utils.get(guild.text_channels, name='👋┊roles-et-filières')  # Changez le nom du canal si besoin
 
@@ -230,6 +246,15 @@ async def on_raw_reaction_remove(payload):
     if role:
         await member.remove_roles(role)
 
+async def add_reaction_with_rate_limit(message, emoji):
+    try:
+        await message.add_reaction(emoji)
+    except discord.HTTPException as e:
+        if e.code == 429:  # Rate limited
+            retry_after = e.retry_after
+            print(f"Rate limited. Retrying after {retry_after} seconds.")
+            await asyncio.sleep(retry_after)
+            await add_reaction_with_rate_limit(message, emoji)
 
 # Lancer le bot
 bot.run(TOKEN)
