@@ -32,6 +32,7 @@ class Verification(commands.Cog):
 
     @commands.command(name='inscription')
     async def inscription(self, ctx, email: str):
+        """Commande pour initier le processus d'inscription."""
         role = discord.utils.get(ctx.guild.roles, name="etudiant")
         if role in ctx.author.roles:
             await ctx.send("Vous avez déjà le rôle Étudiant, l'inscription est terminée.")
@@ -48,6 +49,7 @@ class Verification(commands.Cog):
 
     @commands.command(name='verifier')
     async def verifier(self, ctx, code: int):
+        """Une fois l'inscription initiée, vérifie le code de vérification."""
         if ctx.author.id not in VERIFICATION_CODES:
             await ctx.send("Vous n'avez pas encore initié le processus d'inscription.")
             return
