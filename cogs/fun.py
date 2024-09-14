@@ -57,3 +57,6 @@ class Fun(commands.Cog):
                 await asyncio.sleep(2)  # Envoie le message toutes les 2 secondes
 
         self.repeat_task = asyncio.create_task(repeat_message())
+
+    async def setup(bot):
+        await bot.add_cog(Fun(bot))
