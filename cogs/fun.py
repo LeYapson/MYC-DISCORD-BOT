@@ -7,6 +7,7 @@ import datetime
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.repeat_task = None  # Initialisation de l'attribut repeat_task
 
     @commands.command(name='flip')
     async def flip_coin(self, ctx):
@@ -37,12 +38,12 @@ class Fun(commands.Cog):
 
     @commands.command(name='bobdell')
     async def random_quote(self, ctx):
-        """Commande pour afficher une image au format géant."""
-        image_url = "https://leyapson.github.io/MYC-DISCORD-BOT/bobdell.html"  # Remplacez cette URL par celle de votre image
-        embed = discord.Embed(title="Image Géante")
-        embed.set_image(url=image_url)
+        """Commande pour afficher un lien vers une page HTML."""
+        page_url = "https://leyapson.github.io/MYC-DISCORD-BOT/bobdell.html"  # Remplacez cette URL par celle de votre page HTML
+        embed = discord.Embed(title="Page HTML Géante", description="Cliquez sur le lien pour voir la page.")
+        embed.add_field(name="Lien", value=page_url, inline=False)
         await ctx.send(embed=embed)
-    
+
     @commands.command(name='apagnan')
     async def apagnan(self, ctx):
         """Commande pour faire crier le bot 'YNOV CEST UNE GRANDE FAMILLE' plusieurs fois pendant 20 secondes."""
