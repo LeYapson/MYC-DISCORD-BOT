@@ -58,5 +58,5 @@ class Fun(commands.Cog):
 
         self.repeat_task = asyncio.create_task(repeat_message())
 
-    async def setup(bot):
-        await bot.add_cog(Fun(bot))
+async def setup(bot):
+    await bot.add_cog(Fun(bot))
